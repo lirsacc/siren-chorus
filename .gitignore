@@ -1,0 +1,11 @@
+.envrc
+.vscode
+scratch/
+
+node_modules
+.parcel-cache
+
+dist
+
+logs
+*.log
