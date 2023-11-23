@@ -1,5 +1,7 @@
 import { h, render } from "preact";
 
+import mermaid from "mermaid";
+
 import App from "./components/app";
 
 function init(fn: () => Promise<void>) {
@@ -24,5 +26,6 @@ const developmentSetup = async () => {
 
 init(async () => {
   await developmentSetup();
+  mermaid.initialize({ startOnLoad: false, securityLevel: "antiscript" });
   render(<App />, document.body);
 });
