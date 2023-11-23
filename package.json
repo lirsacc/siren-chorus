@@ -8,9 +8,21 @@
     "fmt-check": "prettier --ignore-unknown --list-different --ignore-path .gitignore ."
   },
   "dependencies": {
+    "@codemirror/autocomplete": "^6.11.0",
+    "@codemirror/commands": "^6.3.0",
+    "@codemirror/language": "^6.9.2",
+    "@codemirror/lint": "^6.4.2",
+    "@codemirror/search": "^6.5.4",
+    "@codemirror/state": "^6.3.1",
+    "@codemirror/view": "^6.22.0",
+    "classnames": "^2.3.2",
+    "codemirror-lang-mermaid": "^0.5.0",
+    "mermaid": "^10.6.1",
     "preact": "^10.19.2"
   },
   "devDependencies": {
+    "@types/mermaid": "^9.2.0",
+    "@types/node": "^20.9.4",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",
     "bun-types": "^1.0.13",
