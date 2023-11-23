@@ -2,12 +2,27 @@ import { h, render } from "preact";
 
 import App from "./components/app";
 
-function init(fn: () => void) {
+function init(fn: () => Promise<void>) {
   if (document.readyState !== "loading") {
-    fn();
+    void fn();
   } else {
-    document.addEventListener("DOMContentLoaded", fn);
+    document.addEventListener("DOMContentLoaded", () => void fn());
   }
 }
 
-init(() => render(<App />, document.body));
+declare const process: {
+  env: {
+    NODE_ENV: "development" | "production";
+  };
+};
+
+const developmentSetup = async () => {
+  if (process.env.NODE_ENV === "development") {
+    await import("preact/devtools");
+  }
+};
+
+init(async () => {
+  await developmentSetup();
+  render(<App />, document.body);
+});
