@@ -1,7 +1,6 @@
 import { Fragment, h } from "preact";
 import { useEffect, useMemo, useState } from "preact/hooks";
 
-import classNames from "classnames";
 import mermaid from "mermaid";
 
 import { randomIshId } from "../utils";
@@ -40,17 +39,16 @@ const MermaidRenderer = ({ data, id }: MermaidRendererProps) => {
     };
 
     void renderGraph();
-  }, [data]);
+  }, [data, _id]);
 
   return (
     <Fragment>
       {error && <div className="p-2 font-mono text-red-500">{error}</div>}
       <div
-        className={classNames("p-2", {
-          "opacity-30": !!error,
-        })}
+        className="p-2"
+        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: rendered || "" }}
-      ></div>
+      />
     </Fragment>
   );
 };
