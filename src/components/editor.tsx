@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { MutableRef, Ref, useEffect, useRef, useState } from "preact/hooks";
+import { MutableRef, Ref, useEffect, useRef } from "preact/hooks";
 
 import * as cmAutocomplete from "@codemirror/autocomplete";
 import * as cmCommands from "@codemirror/commands";
@@ -28,52 +28,25 @@ export const userColor =
   usercolors[Math.round(Math.random() * 100) % usercolors.length];
 
 interface EditorProps {
-  initial?: string;
-  onUpdate?: (contents: string) => void;
+  text: Y.Text;
+  provider: WebrtcProvider;
 }
 
-const Editor = ({ onUpdate, initial }: EditorProps) => {
+const Editor = ({ text, provider }: EditorProps) => {
   const container: Ref<HTMLDivElement> = useRef(null);
 
-  // These should probably come from outside the editor here and be app global.
-  const doc: MutableRef<Y.Doc | null> = useRef(null);
-  const provider: MutableRef<WebrtcProvider | null> = useRef(null);
-  const text: MutableRef<Y.Text | null> = useRef(null);
   const editorState: MutableRef<EditorState | null> = useRef(null);
   const editorView: MutableRef<EditorView | null> = useRef(null);
 
-  const [contents, setContents] = useState(initial || "");
-
-  useEffect(() => {
-    if (onUpdate) {
-      onUpdate(contents);
-    }
-  }, [contents, onUpdate]);
-
   useEffect(() => {
     if (container.current) {
-      // These should probably come from outside the editor here and be app global.
-      doc.current = new Y.Doc();
-
-      provider.current = new WebrtcProvider(
-        "codemirror6-demo-room-2",
-        doc.current,
-      );
-      text.current = doc.current.getText(initial);
-
-      provider.current.awareness.setLocalStateField("user", {
-        name: "Anonymous " + Math.floor(Math.random() * 100),
-        color: userColor.color,
-        colorLight: userColor.light,
-      });
-
       editorState.current = EditorState.create({
         // eslint-disable-next-line @typescript-eslint/no-base-to-string
-        doc: text.current.toString(),
+        doc: text.toString(),
         extensions: [
           EditorView.updateListener.of((update: cmView.ViewUpdate) => {
             if (!update.docChanged) return;
-            setContents(update.state.doc.toString());
+            console.debug("EDITOR UPDATED TO", update.state.doc.toString());
           }),
           cmView.lineNumbers(),
           cmView.highlightActiveLineGutter(),
@@ -105,7 +78,7 @@ const Editor = ({ onUpdate, initial }: EditorProps) => {
             ...cmLint.lintKeymap,
             cmCommands.indentWithTab,
           ]),
-          yCollab(text.current, provider.current.awareness),
+          yCollab(text, provider.awareness),
         ],
       });
       editorView.current = new EditorView({
@@ -113,7 +86,7 @@ const Editor = ({ onUpdate, initial }: EditorProps) => {
         parent: container.current,
       });
     }
-  }, [initial]);
+  }, [text, provider]);
 
   return <div ref={container} />;
 };
