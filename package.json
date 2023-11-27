@@ -28,6 +28,7 @@
     "mermaid": "^10.6.1",
     "preact": "^10.19.2",
     "process": "^0.11.10",
+    "unique-names-generator": "^4.7.1",
     "y-codemirror.next": "^0.3.2",
     "y-webrtc": "^10.2.6",
     "y-websocket": "^1.5.0",
