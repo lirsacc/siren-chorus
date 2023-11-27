@@ -61,9 +61,9 @@ export default function App({ session }: { session: Session }) {
             </div>
           </nav>
         </header>
-        <main className="d-flex flex-fill">
-          <section className="d-flex flex-column" style={{ minWidth: 480 }}>
-            <div className="flex-fill">
+        <main className="d-flex h-100 flex-fill">
+          <section style={{ width: 480 }}>
+            <div className="h-100 overflow-auto">
               {session.provider ? (
                 <Editor text={session.text} provider={session.provider} />
               ) : (
@@ -72,7 +72,9 @@ export default function App({ session }: { session: Session }) {
             </div>
           </section>
           <section className="flex-fill">
-            <MermaidRenderer data={contents} />
+            <div className="h-100 overflow-auto">
+              <MermaidRenderer data={contents} />
+            </div>
           </section>
         </main>
       </div>
