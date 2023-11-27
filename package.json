@@ -10,7 +10,8 @@
     "lint": "eslint src",
     "fmt": "prettier --ignore-unknown --write --ignore-path .gitignore .",
     "fmt-check": "prettier --ignore-unknown --list-different --ignore-path .gitignore .",
-    "run-signaling-server": "node_modules/y-webrtc/bin/server.js"
+    "ws-server": "PORT=4444 y-websocket",
+    "rtc-server": "PORT=4444 node_modules/y-webrtc/bin/server.js"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.11.0",
@@ -29,6 +30,7 @@
     "process": "^0.11.10",
     "y-codemirror.next": "^0.3.2",
     "y-webrtc": "^10.2.6",
+    "y-websocket": "^1.5.0",
     "yjs": "^13.6.10"
   },
   "devDependencies": {
