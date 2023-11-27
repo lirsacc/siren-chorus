@@ -2,7 +2,7 @@ import { Fragment, h } from "preact";
 import { useEffect, useMemo, useState } from "preact/hooks";
 
 import { Session } from "../session";
-import { useStoredString, randomIshId, getRandomColour } from "../utils";
+import { useStoredString, getRandomColour, randomName } from "../utils";
 
 import ClipboardButton from "./clipboard-button";
 import Editor from "./editor";
@@ -12,10 +12,7 @@ export default function App({ session }: { session: Session }) {
   const [contents, setContents] = useState("");
 
   // TODO: Allow changing.
-  const [username] = useStoredString(
-    "siren-chorus:username",
-    `Anonymouse (${randomIshId(4)})`,
-  );
+  const [username] = useStoredString("username", randomName());
 
   const badgeColour = useMemo(getRandomColour, [username]);
 
@@ -30,8 +27,8 @@ export default function App({ session }: { session: Session }) {
   useEffect(() => {
     session.provider.awareness.setLocalStateField("user", {
       name: username,
-      color: badgeColour.bg,
-      colorLight: badgeColour.text,
+      color: badgeColour.color,
+      colorLight: badgeColour.light,
     });
   }, [username, badgeColour, session]);
 
