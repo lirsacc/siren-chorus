@@ -1,7 +1,8 @@
 import { Fragment, h } from "preact";
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo, useState, useRef } from "preact/hooks";
 
 import mermaid from "mermaid";
+import createPanZoom from "panzoom";
 
 import { randomIshId } from "../utils";
 
@@ -12,6 +13,8 @@ interface MermaidRendererProps {
 
 const MermaidRenderer = ({ data, id }: MermaidRendererProps) => {
   const _id = useMemo(() => id || `renderer-${randomIshId()}`, [id]);
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const [rendered, setRendered] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -41,13 +44,20 @@ const MermaidRenderer = ({ data, id }: MermaidRendererProps) => {
     void renderGraph();
   }, [data, _id]);
 
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const panzoom = createPanZoom(containerRef.current);
+    return () => panzoom.dispose();
+  }, []);
+
   return (
     <Fragment>
       {error && <div className="p-2 font-monospace text-danger">{error}</div>}
       <div
+        ref={containerRef}
         className="p-2"
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: rendered || "" }}
+        dangerouslySetInnerHTML={{ __html: rendered || "<svg></svg>" }}
       />
     </Fragment>
   );
