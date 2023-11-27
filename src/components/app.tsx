@@ -10,20 +10,24 @@ export default function App() {
   const state = useAppState();
 
   return (
-    <div className="flex flex-col h-screen">
-      <header className="flex justify-between p-4 bg-slate-900 text-white items-baseline">
-        <nav>
-          <div className="font-bold">SirenChorus</div>
+    <div className="vh-100 d-flex flex-column">
+      <header className="navbar-light bg-light">
+        <nav className="container-fluid d-flex flex-wrap align-items-baseline justify-content-between border-bottom">
+          <div className="d-flex flex-wrap py-2">
+            <a href="#" className="navbar-brand fw-bold">
+              SirenChorus
+            </a>
+          </div>
+          <div className="d-flex flex-wrap py-2">
+            <ClipboardButton className="font-monospace btn btn-secondary">
+              {state.settings.room}
+            </ClipboardButton>
+          </div>
         </nav>
-        <div>
-          <ClipboardButton className="font-mono rounded-full bg-slate-700 hover:bg-slate-500 py-2 px-4">
-            {state.settings.room}
-          </ClipboardButton>
-        </div>
       </header>
-      <main className="flex justify-between flex-1">
-        <section className="flex flex-col w-auto" style={{ minWidth: 480 }}>
-          <div className="flex-1">
+      <main className="d-flex flex-fill">
+        <section className="d-flex flex-column" style={{ minWidth: 480 }}>
+          <div className="flex-fill">
             {state.provider ? (
               <Editor text={state.yText} provider={state.provider} />
             ) : (
@@ -31,7 +35,7 @@ export default function App() {
             )}
           </div>
         </section>
-        <section className="flex-1">
+        <section className="flex-fill">
           <MermaidRenderer data={state.contents} />
         </section>
       </main>
