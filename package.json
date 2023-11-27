@@ -1,4 +1,8 @@
 {
+  "name": "siren-chorus",
+  "private": true,
+  "license": "MIT",
+  "version": "0.0.1",
   "scripts": {
     "build": "parcel build src/index.html",
     "dev": "parcel --no-autoinstall src/index.html",
