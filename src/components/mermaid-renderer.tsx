@@ -43,7 +43,7 @@ const MermaidRenderer = ({ data, id }: MermaidRendererProps) => {
 
   return (
     <Fragment>
-      {error && <div className="p-2 font-mono text-red-500">{error}</div>}
+      {error && <div className="p-2 font-monospace text-danger">{error}</div>}
       <div
         className="p-2"
         // eslint-disable-next-line react/no-danger

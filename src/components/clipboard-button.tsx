@@ -1,29 +1,37 @@
 import { h } from "preact";
-import { useRef } from "preact/hooks";
+import { useRef, useState } from "preact/hooks";
 
-interface ClipboardButtonProps
-  extends h.JSX.HTMLAttributes<HTMLButtonElement> {}
-
-const copy = async (contents: string) => {
-  if (!contents) return;
-  try {
-    await navigator.clipboard.writeText(contents);
-  } catch (err) {
-    console.error("Failed to copy", err);
-  }
-};
+interface ClipboardButtonProps extends h.JSX.HTMLAttributes<HTMLButtonElement> {
+  getContents?: () => string | null;
+}
 
 const ClipboardButton = (props: ClipboardButtonProps) => {
   const ref = useRef<HTMLButtonElement>(null);
+  const [success, setSuccess] = useState(false);
+
+  const getContents = props.getContents || (() => ref.current?.textContent);
 
   const onClick = (evt: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
     if (props.onClick) props.onClick(evt);
 
-    const contents = ref.current?.textContent;
-    if (contents) void copy(contents);
+    const contents = getContents();
+    if (contents) {
+      navigator.clipboard
+        .writeText(contents)
+        .then(() => {
+          setSuccess(true);
+          setTimeout(() => setSuccess(false), 1000);
+        })
+        .catch((err) => console.error("Failed to copy", err));
+    }
   };
 
-  return <button ref={ref} type="button" onClick={onClick} {...props} />;
+  const { children, ...rest } = props;
+  return (
+    <button ref={ref} type="button" onClick={onClick} {...rest}>
+      {success ? "Copied!" : children}
+    </button>
+  );
 };
 
 export default ClipboardButton;

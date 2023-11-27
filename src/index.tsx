@@ -3,6 +3,7 @@ import { h, render } from "preact";
 import mermaid from "mermaid";
 
 import App from "./components/app";
+import { getSessionFromURL } from "./session";
 
 function init(fn: () => Promise<void>) {
   if (document.readyState !== "loading") {
@@ -28,5 +29,6 @@ const developmentSetup = async () => {
 init(async () => {
   await developmentSetup();
   mermaid.initialize({ startOnLoad: false, securityLevel: "antiscript" });
-  render(<App />, document.body);
+  const session = getSessionFromURL();
+  render(<App session={session} />, document.body);
 });
