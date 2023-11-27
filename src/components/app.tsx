@@ -46,9 +46,12 @@ export default function App({ session }: { session: Session }) {
               </a>
             </div>
             <div className="d-flex flex-wrap py-2">
+              <button className="btn btn-default btn-sm font-monospace">
+                {session.room}
+              </button>
               <ClipboardButton
                 getContents={() => session.url().toString()}
-                className="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm me-2"
               >
                 Copy session URL
               </ClipboardButton>

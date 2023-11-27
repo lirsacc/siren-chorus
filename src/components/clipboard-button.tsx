@@ -7,7 +7,7 @@ interface ClipboardButtonProps extends h.JSX.HTMLAttributes<HTMLButtonElement> {
 
 const ClipboardButton = (props: ClipboardButtonProps) => {
   const ref = useRef<HTMLButtonElement>(null);
-  const [success, setSuccess] = useState(false);
+  const [successFlash, setSuccessFlash] = useState(false);
 
   const getContents = props.getContents || (() => ref.current?.textContent);
 
@@ -19,17 +19,23 @@ const ClipboardButton = (props: ClipboardButtonProps) => {
       navigator.clipboard
         .writeText(contents)
         .then(() => {
-          setSuccess(true);
-          setTimeout(() => setSuccess(false), 1000);
+          setSuccessFlash(true);
+          setTimeout(() => setSuccessFlash(false), 1000);
         })
         .catch((err) => console.error("Failed to copy", err));
     }
   };
 
-  const { children, ...rest } = props;
+  const { children, disabled, ...rest } = props;
   return (
-    <button ref={ref} type="button" onClick={onClick} {...rest}>
-      {success ? "Copied!" : children}
+    <button
+      ref={ref}
+      type="button"
+      onClick={onClick}
+      disabled={successFlash || disabled}
+      {...rest}
+    >
+      {successFlash ? "Copied!" : children}
     </button>
   );
 };
