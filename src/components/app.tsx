@@ -63,7 +63,7 @@ export default function App({ session }: { session: Session }) {
         </header>
         <main className="d-flex h-100 flex-fill">
           <section style={{ width: 480 }}>
-            <div className="h-100 overflow-auto">
+            <div className="border-end h-100 overflow-auto">
               {session.provider ? (
                 <Editor text={session.text} provider={session.provider} />
               ) : (

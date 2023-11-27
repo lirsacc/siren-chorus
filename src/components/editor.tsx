@@ -71,7 +71,7 @@ const Editor = ({ text, provider }: EditorProps) => {
     }
   }, [text, provider]);
 
-  return <div className="border-end" ref={container} />;
+  return <div ref={container} />;
 };
 
 export default Editor;
