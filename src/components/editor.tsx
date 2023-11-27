@@ -10,12 +10,13 @@ import { EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import * as cmView from "@codemirror/view";
 import { yCollab, yUndoManagerKeymap } from "y-codemirror.next";
-import { WebrtcProvider } from "y-webrtc";
 import * as Y from "yjs";
+
+import { Provider } from "../session";
 
 interface EditorProps {
   text: Y.Text;
-  provider: WebrtcProvider;
+  provider: Provider;
 }
 
 const Editor = ({ text, provider }: EditorProps) => {

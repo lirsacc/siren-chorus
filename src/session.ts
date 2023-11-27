@@ -1,4 +1,5 @@
 import { WebrtcProvider } from "y-webrtc";
+import { WebsocketProvider } from "y-websocket";
 import * as Y from "yjs";
 
 import { randomIshId } from "./utils";
@@ -36,18 +37,23 @@ export function getSessionFromURL(): Session {
   return new Session(room, password);
 }
 
-export function getSignalingServerURL(): string {
+// TODO: Make this configurable.
+export function getServerURL(): string {
   const url = new URL(window.location.href);
   url.port = "4444";
   return `ws://${url.host}`;
 }
+
+const MODE: "rtc" | "ws" = "ws";
+
+export type Provider = WebsocketProvider | WebrtcProvider;
 
 export class Session {
   room: string;
   password: string;
   doc: Y.Doc;
   text: Y.Text;
-  provider: WebrtcProvider;
+  provider: Provider;
 
   constructor(room: string, password: string) {
     this.room = room;
@@ -55,12 +61,19 @@ export class Session {
     this.doc = new Y.Doc();
     this.text = this.doc.getText();
 
-    this.provider = new WebrtcProvider(room, this.doc, {
-      // TODO: Make configurable
-      signaling: [getSignalingServerURL()],
-      filterBcConns: false,
-      password: password,
-    });
+    if (MODE == "ws") {
+      this.provider = new WebsocketProvider(
+        getServerURL(),
+        this.room,
+        this.doc,
+      );
+    } else {
+      this.provider = new WebrtcProvider(room, this.doc, {
+        signaling: [getServerURL()],
+        filterBcConns: false,
+        password: password,
+      });
+    }
   }
 
   contents(): string {
