@@ -5,7 +5,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
     "fmt": "prettier --ignore-unknown --write --ignore-path .gitignore .",
-    "fmt-check": "prettier --ignore-unknown --list-different --ignore-path .gitignore ."
+    "fmt-check": "prettier --ignore-unknown --list-different --ignore-path .gitignore .",
+    "run-signaling-server": "node_modules/y-webrtc/bin/server.js"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.11.0",
