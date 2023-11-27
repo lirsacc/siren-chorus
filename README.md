@@ -4,7 +4,7 @@
 
 ## Why?
 
-I've recently found myself in multiple meetings editing diagram with multiple people as we work through a problem and felt the need for this. It's also a good opportunity to play with WebRTC and CRDTs.
+I've recently found myself in multiple meetings editing diagram with multiple people as we work through a problem and felt the need for this as the [Mermaid Live Editor](https://mermaid.live/edit) doesn't support this. It's also a good opportunity to play with WebRTC and CRDTs.
 
 Other options:
 
@@ -12,6 +12,7 @@ Other options:
   E.g. [Mermaid's live editor](https://mermaid.live/edit#pako:eNpt0LFuAjEMBuBXMZ7DC9xAhcRQKnXqVmWxkv-4SElMQyKEEO9O7q5seLKc749k39mpBw98wV9DdjgEORVJNlOvfQwO293uS6c80CdiVJp7Q5NeSQropu3jnV2VkzwLmiCFEv7l_Lbtckn0b8OaNXRcAgvuqc1bfaQRiHQqkLphwwklSfB9g_vsLdcJCZaH3nqM0mK1bPOjU2lVf27Z8VBLg-F29lJfC7-G8KFq-V6PstzG8Fnyr2ono8QLHk-kw2Qy).
 - We could use a VSCode remote session but that only works if everyone has it setup and the firewall plays nice.
 - Many visual editors have multiplayer but I'd prefer editing in a text format for easy sharing, version tracking and inclusion in other tech docs later.
+- We can also use a collaborative Markdown editor with mermaid support, e.g. [HackMD](https://hackmd.io/). This is honestly pretty close to what I want with very few rough edges.
 
 ## Architecture
 
