@@ -40,8 +40,10 @@ export function getSessionFromURL(): Session {
 // TODO: Make this configurable.
 export function getServerURL(): string {
   const url = new URL(window.location.href);
+  // TODO: Should be able to use same port as HTTP(s) in prod.
   url.port = "4444";
-  return `ws://${url.host}`;
+  const scheme = url.protocol === "https" ? "wss" : "ws";
+  return `${scheme}://${url.host}`;
 }
 
 const MODE: "rtc" | "ws" = "ws";
