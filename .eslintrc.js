@@ -35,6 +35,12 @@ module.exports = {
     },
   },
   rules: {
+    "no-console": [
+      "warn",
+      {
+        allow: ["error"],
+      },
+    ],
     "sort-imports": "off",
     "import/order": [
       "error",
