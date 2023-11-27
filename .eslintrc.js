@@ -27,10 +27,7 @@ module.exports = {
   settings: {
     react: {
       pragma: "h",
-      react: {
-        pragma: "h",
-        version: "16.0",
-      },
+      version: "16.0",
     },
     "import/resolver": {
       typescript: true,
