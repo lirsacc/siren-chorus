@@ -72,40 +72,63 @@ const MermaidRenderer = ({
   useEffect(() => {
     if (!containerRef.current) return;
     if (!enableZoom) return;
-    const node = containerRef.current;
     const instance = Panzoom(containerRef.current, {
       maxScale: 5,
+      // disablePan: true,
     });
+
     panzoomRef.current = instance;
 
-    node.addEventListener("wheel", instance.zoomWithWheel);
+    const handleWheel = (evt: WheelEvent) => {
+      evt.preventDefault();
+      if (evt.metaKey) {
+        instance.zoomWithWheel(evt);
+      } else {
+        // TODO: Test this but on my machine if I hold shift the deltaX is set
+        // instead of deltaY so no need for manual handling.
+        // TODO: Test on trackpad.
+        // TODO: Test whether this can be done without the JS and simple
+        // scrolling the container.
+        const sensitivity = 0.3;
+        const { x, y } = instance.getPan();
+        instance.pan(
+          x - evt.deltaX * sensitivity,
+          y - evt.deltaY * sensitivity,
+        );
+      }
+    };
+
+    const node = containerRef.current.parentElement || containerRef.current;
+    node.addEventListener("wheel", handleWheel);
     return () => {
-      node.removeEventListener("wheel", instance.zoomWithWheel);
+      node.removeEventListener("wheel", handleWheel);
       instance.destroy();
     };
   }, [enableZoom]);
 
-  const _controlHandler = (fn: ((x: PanzoomObject) => void)) => (evt: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
-    evt.preventDefault();
-    if (!containerRef.current || !panzoomRef.current) return;
-    fn(panzoomRef.current);
-  };
+  const _controlHandler =
+    (fn: (x: PanzoomObject) => void) =>
+    (evt: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
+      evt.preventDefault();
+      if (!containerRef.current || !panzoomRef.current) return;
+      fn(panzoomRef.current);
+    };
 
   const zoomIn = _controlHandler((x) => x.zoomIn());
   const zoomOut = _controlHandler((x) => x.zoomOut());
-  const resetZoom = _controlHandler((x) => x.reset());
+  const resetZoom = _controlHandler((x) => x.reset({ animate: false }));
 
   return (
-    <div className="h-100 w-100 overflow-auto position-relative">
-      {error && <div className="p-2 font-monospace text-danger">{error}</div>}
-      <div
-        ref={containerRef}
-        className="p-2"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: rendered || "<svg></svg>" }}
-      />
+    <div className="h-100 w-100 position-relative">
+      <div className="h-100 w-100">
+        <div
+          ref={containerRef}
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: rendered || "<svg></svg>" }}
+        />
+      </div>
       {enableZoom && showZoomControls && (
-        <div className="position-absolute end-0 bottom-0">
+        <div className="position-absolute end-0 bottom-0 m-1">
           <div class="btn-group m-1">
             <Control onClick={resetZoom}>Reset</Control>
           </div>
@@ -113,6 +136,11 @@ const MermaidRenderer = ({
             <Control onClick={zoomOut}>-</Control>
             <Control onClick={zoomIn}>+</Control>
           </div>
+        </div>
+      )}
+      {error && (
+        <div className="max-p-2 m-2 mw-100 font-monospace alert alert-danger position-absolute top-0 start-0">
+          {error}
         </div>
       )}
     </div>
