@@ -10,7 +10,8 @@ import { randomIshId } from "../utils";
 interface MermaidRendererProps {
   data: string;
   id?: string;
-  showControls?: boolean;
+  enableZoom?: boolean;
+  showZoomControls?: boolean;
 }
 
 interface ControlProps {
@@ -29,7 +30,7 @@ const Control = ({ onClick, children, className }: ControlProps) => (
   </button>
 );
 
-const MermaidRenderer = ({ data, id, showControls }: MermaidRendererProps) => {
+const MermaidRenderer = ({ data, id, showZoomControls, enableZoom }: MermaidRendererProps) => {
   const _id = useMemo(() => id || `renderer-${randomIshId()}`, [id]);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -65,6 +66,7 @@ const MermaidRenderer = ({ data, id, showControls }: MermaidRendererProps) => {
 
   useEffect(() => {
     if (!containerRef.current) return;
+    if (!enableZoom) return;
     panzoomRef.current = createPanZoom(containerRef.current, {
       bounds: true,
       boundsPadding: 0.5,
@@ -72,7 +74,7 @@ const MermaidRenderer = ({ data, id, showControls }: MermaidRendererProps) => {
       minZoom: 0.5,
     });
     return () => panzoomRef.current?.dispose();
-  }, []);
+  }, [enableZoom]);
 
   const setZoom = (
     evt: h.JSX.TargetedMouseEvent<HTMLButtonElement>,
@@ -113,7 +115,7 @@ const MermaidRenderer = ({ data, id, showControls }: MermaidRendererProps) => {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: rendered || "<svg></svg>" }}
       />
-      {showControls && (
+      {(enableZoom && showZoomControls) && (
         <div className="position-absolute end-0 bottom-0">
           <div class="btn-group m-1">
             <Control onClick={resetZoom}>Reset</Control>
