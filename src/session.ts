@@ -89,6 +89,13 @@ export class Session {
   }
 
   refresh(): void {
+    // Attemp clean disconnection first
+    try {
+      this.provider.disconnect();
+      this.provider.destroy();
+    } catch (err) {
+      // Page will close so doesn't really matter much
+    }
     resetSession();
   }
 }
