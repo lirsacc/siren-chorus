@@ -20,12 +20,41 @@ Other options:
 
 ## Development
 
+### Locally
+
 - Install [bun](https://bun.sh). The version used is documented in [`.tool-versions`](./.tool-versions).
-- Run `bun dev`
+- Run `bun dev` and `bun run ws-server` in 2 separate shells.
 - Head to `http://localhost:1234`
 
-> TODO
+Other development tasks such `bun run lint` are available under `package.json:scripts`.
+
+### GitHub actions
+
+Linting and type-checking will run on pull requests against the `main` branch and pushed to `main`.
 
 ## Deployment
 
-> TODO
+### Docker
+
+There's no public live deployment yet but there is a Docker image available.
+
+To build the docker image:
+
+```shell
+bun run build
+docker build -t siren-chorus:latest .
+```
+
+### fly.io
+
+Deploying against [fly.io](https://fly.io) is also possible by copying the [example config](./fly.example.toml) and creating a new app.
+
+```shell
+bun run build
+fly launch
+fly scale count 1
+```
+
+After the first launch you should be able to just do `fly deploy --ha=false`.
+
+Disabling HA is required as the websocket server needs to have a single instance for now.
