@@ -4,7 +4,7 @@
   "license": "MIT",
   "version": "0.0.1",
   "scripts": {
-    "build": "parcel build src/index.html",
+    "build": "NODE_ENV=production rm -rf dist/ && parcel build --dist-dir dist src/index.html",
     "dev": "WS_PORT=4444 parcel --no-autoinstall src/index.html",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
@@ -37,7 +37,6 @@
   "devDependencies": {
     "@parcel/transformer-sass": "2.10.3",
     "@types/bootstrap": "^5.2.10",
-    "@types/mermaid": "^9.2.0",
     "@types/node": "^20.9.4",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",
