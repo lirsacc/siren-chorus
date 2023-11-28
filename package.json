@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "scripts": {
     "build": "parcel build src/index.html",
-    "dev": "parcel --no-autoinstall src/index.html",
+    "dev": "WS_PORT=4444 parcel --no-autoinstall src/index.html",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
     "fmt": "prettier --ignore-unknown --write --ignore-path .gitignore .",
