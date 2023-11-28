@@ -7,6 +7,7 @@ import { useStoredString, getRandomColour, randomName } from "../utils";
 import Editor from "./editor";
 import Header from "./header";
 import MermaidRenderer from "./mermaid-renderer";
+import Resizable from "./resizable";
 
 export default function App({ session }: { session: Session }) {
   const [contents, setContents] = useState("");
@@ -37,22 +38,20 @@ export default function App({ session }: { session: Session }) {
     <Fragment>
       <div className="vh-100 d-flex flex-column">
         <Header session={session} />
-        <main className="d-flex h-100 flex-fill">
-          <section style={{ width: 480 }}>
-            <div className="border-end h-100 overflow-auto">
+        <div className="h-100 flex-fill d-flex">
+          <Resizable initialWidth={460} minWidth={200}>
+            <div className="h-100 overflow-auto">
               {session.provider ? (
                 <Editor text={session.text} provider={session.provider} />
               ) : (
                 "Loading"
               )}
             </div>
-          </section>
-          <section className="flex-fill">
-            <div className="h-100">
-              <MermaidRenderer enableZoom showZoomControls data={contents} />
-            </div>
-          </section>
-        </main>
+          </Resizable>
+          <div className="flex-fill">
+            {<MermaidRenderer enableZoom showZoomControls data={contents} />}
+          </div>
+        </div>
       </div>
     </Fragment>
   );

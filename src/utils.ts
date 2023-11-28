@@ -6,6 +6,10 @@ import {
   animals,
 } from "unique-names-generator";
 
+export function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
+}
+
 export function randomName(): string {
   return uniqueNamesGenerator({
     dictionaries: [adjectives, animals],

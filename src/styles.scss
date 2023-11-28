@@ -1,1 +1,14 @@
 @import "npm:bootstrap/scss/bootstrap";
+
+.panels-divider {
+  cursor: col-resize;
+  width: 2px;
+  padding: 0;
+  margin: 0 2px;
+  height: 100%;
+  background: var(--bs-gray-400);
+  &:hover,
+  &.is-held {
+    background: var(--bs-primary);
+  }
+}
