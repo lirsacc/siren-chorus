@@ -20,6 +20,7 @@ export default function App({ session }: { session: Session }) {
     const handler = () => {
       setContents(session.contents());
     };
+    handler();
     session.doc.on("update", handler);
     return () => session.doc.off("update", handler);
   }, [session, setContents]);
