@@ -44,7 +44,7 @@ export default function App({ session }: { session: Session }) {
               </a>
             </div>
             <div className="d-flex flex-wrap py-2">
-              <button className="btn btn-default btn-sm font-monospace">
+              <button className="btn btn-default btn-sm font-monospace me-2">
                 {session.room}
               </button>
               <ClipboardButton
