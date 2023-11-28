@@ -2,15 +2,23 @@ import { ComponentChildren, h } from "preact";
 import { useRef, useState, useEffect } from "preact/hooks";
 
 import * as b from "bootstrap";
+import classNames from "classnames";
 
 interface ModalProps {
   children: ComponentChildren;
   visible: boolean;
   title: ComponentChildren;
+  scrollable: boolean;
   onHide?: () => void;
 }
 
-const Modal = ({ children, visible, title, onHide }: ModalProps) => {
+const Modal = ({
+  children,
+  visible,
+  title,
+  onHide,
+  scrollable,
+}: ModalProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [modal, setModal] = useState<b.Modal | null>(null);
 
@@ -35,12 +43,14 @@ const Modal = ({ children, visible, title, onHide }: ModalProps) => {
 
   return (
     <div className="modal fade" ref={ref} tabIndex={-1} aria-hidden={!visible}>
-      <div className="modal-dialog">
+      <div
+        className={classNames("modal-dialog", {
+          "modal-dialog-scrollable": scrollable,
+        })}
+      >
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title" id="exampleModalLabel">
-              {title}
-            </h5>
+            <h5 className="modal-title">{title}</h5>
             {onHide && (
               <button
                 type="button"

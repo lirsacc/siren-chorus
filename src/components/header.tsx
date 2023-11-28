@@ -4,7 +4,13 @@ import { Session } from "../session";
 
 import ClipboardButton from "./clipboard-button";
 
-const Header = ({ session }: { session: Session }) => {
+const Header = ({
+  session,
+  showHelp,
+}: {
+  session: Session;
+  showHelp?: () => void;
+}) => {
   return (
     <header className="navbar-light bg-light">
       <nav className="container-fluid d-flex flex-wrap align-items-baseline justify-content-between border-bottom">
@@ -24,11 +30,19 @@ const Header = ({ session }: { session: Session }) => {
             Copy session URL
           </ClipboardButton>
           <button
-            className="btn btn-danger btn-sm"
+            className="btn btn-danger btn-sm me-2"
             onClick={() => session.refresh()}
           >
             New session
           </button>
+          {showHelp && (
+            <button
+              className="btn btn-outline-secondary btn-sm"
+              onClick={showHelp}
+            >
+              Help
+            </button>
+          )}
         </div>
       </nav>
     </header>
