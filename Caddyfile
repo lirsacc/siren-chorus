@@ -1,0 +1,13 @@
+# Caddyfile for local dev with HTTPs and single hostname
+localhost {
+	@ws {
+		header Connection *Upgrade*
+		header Upgrade websocket
+	}
+	reverse_proxy @ws localhost:4444
+
+	encode gzip
+	reverse_proxy localhost:1234
+
+	log
+}

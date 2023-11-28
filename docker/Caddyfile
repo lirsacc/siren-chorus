@@ -1,0 +1,28 @@
+# Caddyfile for use in the docker image
+{
+	admin off
+
+	# Assume this is hosted somewhere behind a reverse proxy which handles HTTPS
+	# itself.
+	auto_https off
+}
+
+:8080 {
+	# Serve websocket connections on the same host, forward to the bun backend.
+	@ws {
+		header Connection *Upgrade*
+		header Upgrade websocket
+	}
+	reverse_proxy @ws localhost:4444
+
+	# Everything else is static files.
+	root * ./dist
+
+	rewrite / /index.html
+
+	encode gzip
+	file_server
+
+	# General settings
+	log
+}
