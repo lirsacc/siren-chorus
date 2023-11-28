@@ -73,7 +73,7 @@ export default function App({ session }: { session: Session }) {
             </div>
           </section>
           <section className="flex-fill">
-            <div className="h-100 overflow-auto">
+            <div className="h-100">
               <MermaidRenderer enableZoom showZoomControls data={contents} />
             </div>
           </section>
