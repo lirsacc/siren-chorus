@@ -9,6 +9,7 @@ import * as cmSearch from "@codemirror/search";
 import { EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import * as cmView from "@codemirror/view";
+import { mermaid, foldByIndent } from "codemirror-lang-mermaid";
 import { yCollab, yUndoManagerKeymap } from "y-codemirror.next";
 import * as Y from "yjs";
 
@@ -40,6 +41,7 @@ const Editor = ({ text, provider }: EditorProps) => {
           cmView.dropCursor(),
           EditorState.allowMultipleSelections.of(true),
           cmLanguage.indentOnInput(),
+          mermaid(),
           cmLanguage.syntaxHighlighting(cmLanguage.defaultHighlightStyle, {
             fallback: true,
           }),
@@ -50,6 +52,7 @@ const Editor = ({ text, provider }: EditorProps) => {
           cmView.crosshairCursor(),
           cmView.highlightActiveLine(),
           cmSearch.highlightSelectionMatches(),
+          foldByIndent(),
           cmView.keymap.of([
             ...cmAutocomplete.closeBracketsKeymap,
             ...cmCommands.defaultKeymap,
