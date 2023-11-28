@@ -40,7 +40,7 @@ export function getSessionFromURL(): Session {
 // TODO: Make this configurable.
 export function getServerURL(): string {
   const url = new URL(window.location.href);
-  if (process.env.WS_PORT) {
+  if (process.env.WS_PORT && process.env.NODE_ENV === "development") {
     url.port = process.env.WS_PORT;
   }
   const scheme = url.protocol.includes("https") ? "wss" : "ws";
