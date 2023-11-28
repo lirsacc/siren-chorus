@@ -1,9 +1,9 @@
 import { h } from "preact";
 import { useEffect, useMemo, useState, useRef } from "preact/hooks";
 
+import Panzoom, { PanzoomObject } from "@panzoom/panzoom";
 import classNames from "classnames";
 import mermaid from "mermaid";
-import createPanZoom, { PanZoom } from "panzoom";
 
 import { randomIshId } from "../utils";
 
@@ -30,11 +30,16 @@ const Control = ({ onClick, children, className }: ControlProps) => (
   </button>
 );
 
-const MermaidRenderer = ({ data, id, showZoomControls, enableZoom }: MermaidRendererProps) => {
+const MermaidRenderer = ({
+  data,
+  id,
+  showZoomControls,
+  enableZoom,
+}: MermaidRendererProps) => {
   const _id = useMemo(() => id || `renderer-${randomIshId()}`, [id]);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const panzoomRef = useRef<PanZoom | null>(null);
+  const panzoomRef = useRef<PanzoomObject | null>(null);
 
   const [rendered, setRendered] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -67,44 +72,28 @@ const MermaidRenderer = ({ data, id, showZoomControls, enableZoom }: MermaidRend
   useEffect(() => {
     if (!containerRef.current) return;
     if (!enableZoom) return;
-    panzoomRef.current = createPanZoom(containerRef.current, {
-      bounds: true,
-      boundsPadding: 0.5,
-      maxZoom: 5,
-      minZoom: 0.5,
+    const node = containerRef.current;
+    const instance = Panzoom(containerRef.current, {
+      maxScale: 5,
     });
-    return () => panzoomRef.current?.dispose();
+    panzoomRef.current = instance;
+
+    node.addEventListener("wheel", instance.zoomWithWheel);
+    return () => {
+      node.removeEventListener("wheel", instance.zoomWithWheel);
+      instance.destroy();
+    };
   }, [enableZoom]);
 
-  const setZoom = (
-    evt: h.JSX.TargetedMouseEvent<HTMLButtonElement>,
-    step: number,
-  ) => {
+  const _controlHandler = (fn: ((x: PanzoomObject) => void)) => (evt: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
     if (!containerRef.current || !panzoomRef.current) return;
-
-    const svg = containerRef.current.getElementsByTagName("svg")[0];
-
-    if (!svg) return;
-
-    const rect = svg.getBBox();
-    const cx = rect.x + rect.width / 2;
-    const cy = rect.y + rect.height / 2;
-    panzoomRef.current.smoothZoom(cx, cy, step);
+    fn(panzoomRef.current);
   };
 
-  const increaseZoom = (evt: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
-    setZoom(evt, 0.5);
-
-  const decreaseZoom = (evt: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
-    setZoom(evt, 2);
-
-  const resetZoom = (evt: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
-    evt.preventDefault();
-    if (!containerRef.current || !panzoomRef.current) return;
-    panzoomRef.current.smoothMoveTo(0, 0);
-    panzoomRef.current.smoothZoomAbs(0, 0, 1);
-  };
+  const zoomIn = _controlHandler((x) => x.zoomIn());
+  const zoomOut = _controlHandler((x) => x.zoomOut());
+  const resetZoom = _controlHandler((x) => x.reset());
 
   return (
     <div className="h-100 w-100 overflow-auto position-relative">
@@ -115,14 +104,14 @@ const MermaidRenderer = ({ data, id, showZoomControls, enableZoom }: MermaidRend
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: rendered || "<svg></svg>" }}
       />
-      {(enableZoom && showZoomControls) && (
+      {enableZoom && showZoomControls && (
         <div className="position-absolute end-0 bottom-0">
           <div class="btn-group m-1">
             <Control onClick={resetZoom}>Reset</Control>
           </div>
           <div class="btn-group m-1">
-            <Control onClick={increaseZoom}>-</Control>
-            <Control onClick={decreaseZoom}>+</Control>
+            <Control onClick={zoomOut}>-</Control>
+            <Control onClick={zoomIn}>+</Control>
           </div>
         </div>
       )}
