@@ -9,3 +9,5 @@ dist
 
 logs
 *.log
+
+fly.toml
