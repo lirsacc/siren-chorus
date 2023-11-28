@@ -1,0 +1,2 @@
+ws: /app/server.sh
+caddy: caddy run --config Caddyfile

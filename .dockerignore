@@ -1,0 +1,5 @@
+*
+!docker/
+!package.json
+!bun.lockb
+!dist
