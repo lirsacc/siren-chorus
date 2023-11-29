@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { Fragment, h } from "preact";
 import { useEffect, useMemo, useState, useRef } from "preact/hooks";
 
 import Panzoom, { PanzoomObject } from "@panzoom/panzoom";
@@ -39,6 +39,7 @@ const MermaidRenderer = ({
   const _id = useMemo(() => id || `renderer-${randomIshId()}`, [id]);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const hiddenRef = useRef<HTMLDivElement | null>(null);
   const panzoomRef = useRef<PanzoomObject | null>(null);
 
   const [rendered, setRendered] = useState<string | null>(null);
@@ -53,11 +54,14 @@ const MermaidRenderer = ({
       }
 
       try {
-        const { svg } = await mermaid.render(_id, data);
+        const { svg } = await mermaid.render(
+          _id,
+          data,
+          hiddenRef.current || undefined,
+        );
         setRendered(svg);
         setError(null);
       } catch (err) {
-        setRendered(null);
         if (err instanceof Error) {
           setError(err?.message);
         } else {
@@ -119,31 +123,40 @@ const MermaidRenderer = ({
   const resetZoom = _controlHandler((x) => x.reset({ animate: false }));
 
   return (
-    <div className="h-100 w-100 position-relative">
-      <div className="h-100 w-100">
-        <div
-          ref={containerRef}
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: rendered || "<svg></svg>" }}
-        />
+    <Fragment>
+      {/* Needed for mermaid to render into without messing up the layout. */}
+      <div className="d-none">
+        <div ref={hiddenRef} />
       </div>
-      {enableZoom && showZoomControls && (
-        <div className="position-absolute end-0 bottom-0 m-1">
-          <div class="btn-group m-1">
-            <Control onClick={resetZoom}>Reset</Control>
-          </div>
-          <div class="btn-group m-1">
-            <Control onClick={zoomOut}>-</Control>
-            <Control onClick={zoomIn}>+</Control>
-          </div>
+      <div className="h-100 w-100 position-relative">
+        <div className="h-100 w-100">
+          <div
+            ref={containerRef}
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: rendered || "<svg></svg>" }}
+          />
         </div>
-      )}
-      {error && (
-        <div className="max-p-2 m-2 mw-100 font-monospace alert alert-danger position-absolute top-0 start-0">
-          {error}
-        </div>
-      )}
-    </div>
+        {enableZoom && showZoomControls && (
+          <div className="position-absolute end-0 bottom-0 m-1">
+            <div class="btn-group m-1">
+              <Control onClick={resetZoom}>Reset</Control>
+            </div>
+            <div class="btn-group m-1">
+              <Control onClick={zoomOut}>-</Control>
+              <Control onClick={zoomIn}>+</Control>
+            </div>
+          </div>
+        )}
+        {error && (
+          <div className="m-2 mw-100 alert alert-danger position-absolute top-0 start-0 end-0">
+            <p className="fw-bold">Something went wrong.</p>
+            {!!rendered && <p>Showing last valid result.</p>}
+            <hr />
+            <pre>{error}</pre>
+          </div>
+        )}
+      </div>
+    </Fragment>
   );
 };
 
